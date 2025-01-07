@@ -5,7 +5,7 @@ if (process.env.NODE_ENV !== 'PRODUCTION') {
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3010;
 const connectDataBase = require('./DB/database.js');
 
 app.get('/ping', (req, res) => {
