@@ -9,7 +9,7 @@ const routes = require('./routes/router.js');
 const app = express();
 
 app.use(express.json());  
-const PORT = process.env.PORT || 3010;
+const PORT = process.env.PORT || 8080;
 
 app.use('/api', routes);  
 
