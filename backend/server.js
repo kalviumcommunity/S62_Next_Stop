@@ -1,21 +1,23 @@
 if (process.env.NODE_ENV !== 'PRODUCTION') {
-    require('dotenv').config();  
+    require('dotenv').config();
 }
 
 const express = require('express');
 const mongoose = require('mongoose');
-const connectDataBase = require('./DB/database.js');
-const routes = require('./routes/router.js');  
+const cors = require('cors');
+const connectDatabase = require('./DB/database.js');
+const routes = require('./routes/router.js');
+
 const app = express();
 
-app.use(express.json());  
-const PORT = process.env.PORT || 8080;
+app.use(express.json());
+app.use(cors());
 
-app.use('/api', routes);  
+const PORT = process.env.PORT || 3010;
 
-app.get('/ping', (req, res) => {
-    return res.send('pong');
-});
+app.use('/api', routes);
+
+app.get('/ping', (req, res) => res.send('pong'));
 
 app.get('/', (req, res) => {
     const status = mongoose.connection.readyState === 1 ? 'Connected' : 'Not Connected';
@@ -23,6 +25,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    connectDataBase();  
+    connectDatabase();
     console.log(`Server is running at http://localhost:${PORT}`);
 });

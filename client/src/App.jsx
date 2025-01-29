@@ -1,6 +1,7 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
+import axios from "axios";
+import Entities from "./components/entities";
 
 const HomePage = () => {
   return (
@@ -48,11 +49,20 @@ const HomePage = () => {
 };
 
 const PlacesPage = () => {
-  const [places] = useState([
-    { id: 1, name: "Paris", description: "The city of light" },
-    { id: 2, name: "New York", description: "The Big Apple" },
-    { id: 3, name: "Tokyo", description: "The Land of the Rising Sun" },
-  ]);
+  const [places, setPlaces] = useState([]);
+
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/places");
+        setPlaces(response.data);
+      } catch (error) {
+        console.error("Error fetching places:", error);
+      }
+    };
+
+    fetchPlaces();
+  }, []);
 
   return (
     <div className="bg-gray-900 min-h-screen text-white flex flex-col items-center">
@@ -62,7 +72,11 @@ const PlacesPage = () => {
           <p className="text-gray-300">No places found.</p>
         ) : (
           places.map((place) => (
-            <Link key={place.id} to={`/places/${place.id}`} className="block bg-gray-800 p-4 rounded-lg shadow-md border border-gray-600 w-80 text-center hover:bg-gray-700 transition">
+            <Link
+              key={place._id}
+              to={`/places/${place._id}`}
+              className="block bg-gray-800 p-4 rounded-lg shadow-md border border-gray-600 w-80 text-center hover:bg-gray-700 transition"
+            >
               <h3 className="text-xl font-semibold text-cyan-300">{place.name}</h3>
               <p className="text-gray-300 mt-2">{place.description}</p>
             </Link>
@@ -75,13 +89,20 @@ const PlacesPage = () => {
 
 const PlaceDetailsPage = () => {
   const { id } = useParams();
-  const placeDetails = {
-    1: { name: "Paris", description: "The city of light", details: "Famous for the Eiffel Tower, Louvre Museum, and Notre-Dame Cathedral." },
-    2: { name: "New York", description: "The Big Apple", details: "Famous for the Statue of Liberty, Central Park, and Times Square." },
-    3: { name: "Tokyo", description: "The Land of the Rising Sun", details: "Known for Mount Fuji, Tokyo Tower, and Akihabara." },
-  };
+  const [place, setPlace] = useState(null);
 
-  const place = placeDetails[id];
+  useEffect(() => {
+    const fetchPlaceDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/places/${id}`);
+        setPlace(response.data);
+      } catch (error) {
+        console.error("Error fetching place details:", error);
+      }
+    };
+
+    fetchPlaceDetails();
+  }, [id]);
 
   return (
     <div className="bg-gray-900 min-h-screen text-white flex flex-col items-center justify-center px-6">
@@ -89,7 +110,7 @@ const PlaceDetailsPage = () => {
         <div className="max-w-2xl text-center">
           <h2 className="text-4xl font-semibold text-amber-400">{place.name}</h2>
           <p className="text-lg text-gray-300 mt-4">{place.description}</p>
-          <p className="text-md text-gray-400 mt-4">{place.details}</p>
+          <p className="text-md text-gray-400 mt-4">{place.details || "No additional details available."}</p>
           <Link
             to="/places"
             className="mt-6 inline-block bg-emerald-500 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-emerald-600 transition"
@@ -98,7 +119,7 @@ const PlaceDetailsPage = () => {
           </Link>
         </div>
       ) : (
-        <p className="text-gray-300 text-center mt-12">Place not found</p>
+        <p className="text-gray-300 text-center mt-12">Loading place details...</p>
       )}
     </div>
   );
@@ -109,8 +130,8 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/places" element={<PlacesPage />} />
         <Route path="/places/:id" element={<PlaceDetailsPage />} />
+        <Route path="/places" element={<Entities />} />
       </Routes>
     </Router>
   );

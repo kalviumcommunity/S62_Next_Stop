@@ -1,54 +1,66 @@
 const express = require('express');
-const Item = require('../models/itemModel'); 
+const Place = require('../models/itemModel'); 
 const router = express.Router();
 
-router.get('/users', async (req, res) => {
+// ✅ Get all places
+router.get('/places', async (req, res) => {
     try {
-        const userData = await Item.find(); 
-        return res.status(200).send(userData);
+        const places = await Place.find();  
+        return res.status(200).json(places);
     } catch (err) {
-        console.error("Error fetching users:", err);
-        return res.status(500).send({ message: err.message });
+        console.error("Error fetching places:", err);
+        return res.status(500).json({ message: err.message });
     }
 });
 
-router.post('/', async (req, res) => {
+// ✅ Add a new place
+router.post('/new-places', async (req, res) => {
     try {
-        const newItem = new Item(req.body); 
-        const savedItem = await newItem.save(); 
-        return res.status(201).send({ message: "Data inserted successfully", savedItem });
+        const { name, location, description,visited } = req.body;
+
+        if (!name || !location || !description) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        const newPlace = new Place({ name, location, description,visited });  
+        const savedPlace = await newPlace.save();  
+        return res.status(201).json({ message: "Place added successfully", savedPlace });
     } catch (err) {
-        console.error("Error inserting data:", err);
-        return res.status(500).send({ message: err.message });
+        console.error("Error adding place:", err);
+        return res.status(500).json({ message: err.message });
     }
 });
 
-router.delete('/:id', async (req, res) => {
+// ✅ Update place
+router.put('/places/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const deleteResult = await Item.deleteOne({ _id: id }); 
-        if (deleteResult.deletedCount === 0) {
-            return res.status(404).send({ message: "Item not found" });
+        const updatedPlace = await Place.findByIdAndUpdate(id, req.body, { new: true });
+
+        if (!updatedPlace) {
+            return res.status(404).json({ message: "Place not found or no changes made" });
         }
-        return res.status(200).send({ message: "Deleted successfully", deleteResult });
+        return res.status(200).json({ message: "Place updated successfully", updatedPlace });
     } catch (err) {
-        console.error("Error deleting item:", err);
-        return res.status(500).send({ message: err.message });
+        console.error("Error updating place:", err);
+        return res.status(500).json({ message: err.message });
     }
 });
 
-router.put('/:id', async (req, res) => {
+// ✅ Delete place
+router.delete('/places/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const updateResult = await Item.updateOne({ _id: id }, { $set: req.body }); 
-        if (updateResult.modifiedCount === 0) {
-            return res.status(404).send({ message: "Item not found or no changes made" });
+        const deletedPlace = await Place.findByIdAndDelete(id);
+
+        if (!deletedPlace) {
+            return res.status(404).json({ message: "Place not found" });
         }
-        return res.status(200).send({ message: "Updated successfully", updateResult });
+        return res.status(200).json({ message: "Place deleted successfully", deletedPlace });
     } catch (err) {
-        console.error("Error updating item:", err);
-        return res.status(500).send({ message: err.message });
+        console.error("Error deleting place:", err);
+        return res.status(500).json({ message: err.message });
     }
 });
 
-module.exports = router;
+module.exports = router;
