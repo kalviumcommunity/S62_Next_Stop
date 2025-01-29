@@ -1,13 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const PlaceCard = ({ place }) => {
+const PlaceCard = ({ id, name, description }) => {
   return (
-    <div className="bg-gray-900 p-6 rounded-lg shadow-lg border border-gray-700">
-      <h3 className="text-xl font-bold text-cyan-300">{place?.name}</h3>
-      <p className="mt-2 text-gray-400"><span className="font-medium text-white">Location:</span> {place?.location || "Unknown"}</p>
-      <p className="mt-1 text-gray-400"><span className="font-medium text-white">Reviews:</span> {place?.reviews || "No reviews yet"}</p>
-      <p className="mt-1 text-gray-400"><span className="font-medium text-white">Status:</span> {place?.visited ? "Visited" : "Not Visited"}</p>
-    </div>
+    <Link
+      to={`/places/${id}`}
+      className="block bg-gray-800 p-4 rounded-lg shadow-md border border-gray-600 w-80 text-center hover:bg-gray-700 transition"
+    >
+      <h3 className="text-xl font-semibold text-cyan-300">{name}</h3>
+      <p className="text-gray-300 mt-2">{description}</p>
+    </Link>
   );
 };
 
