@@ -1,67 +1,68 @@
-const mongoose = require('mongoose');
+// require('dotenv').config();  
+// const mongoose = require('mongoose');
 
-const dbURI = 'mongodb://localhost:27017/my_database'; 
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.log('Error connecting to MongoDB:', err));
+// const dbURI = process.env.MONGO_URI;  
 
+// mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+//   .then(() => console.log('Connected to MongoDB'))
+//   .catch(err => console.error('Error connecting to MongoDB:', err));
 
-  const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address'],
-  },
-  age: {
-    type: Number,
-    required: true,
-    min: [18, 'Age must be at least 18'],
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+// const placeSchema = new mongoose.Schema({
+//   name: {
+//     type: String,
+//     required: true,
+//   },
+//   location: {
+//     type: String,
+//     required: true,
+//   },
+//   reviews: {
+//     type: [String],  
+//     default: [],
+//   },
+//   visited: {
+//     type: Boolean,
+//     default: false,
+//   }
+// }, { timestamps: true });
 
-const User = mongoose.model('User', userSchema);
+// const Place = mongoose.model('Place', placeSchema);
 
-const createUsers = async () => {
-  try {
-    const user1 = new User({
-      name: 'Danushri',
-      email: 'danushri.prakashsaranya@gmail.com',
-      age: 18,
-    });
+// // Insert Sample Destinations
+// const createPlaces = async () => {
+//   try {
+//     const places = [
+//       {
+//         name: 'Eiffel Tower',
+//         location: 'Paris, France',
+//         reviews: ['Amazing view!', 'Loved the lighting at night.'],
+//         visited: false,
+//       },
+//       {
+//         name: 'Great Wall of China',
+//         location: 'China',
+//         reviews: ['Breathtaking scenery!', 'A must-visit.'],
+//         visited: true,
+//       }
+//     ];
 
-    const user2 = new User({
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      age: 30,
-    });
+//     await Place.insertMany(places);
+//     console.log('Places saved successfully');
+//   } catch (err) {
+//     console.error('Error inserting places:', err);
+//   }
+// };
 
-    await user1.save();
-    await user2.save();
+// // Fetch All Places
+// const getPlaces = async () => {
+//   try {
+//     const places = await Place.find();
+//     console.log('All travel destinations:', places);
+//   } catch (err) {
+//     console.error('Error fetching places:', err);
+//   }
+// };
 
-    console.log('Users saved successfully!');
-  } catch (err) {
-    console.error('Error inserting users:', err);
-  }
-};
-
-
-const getUsers = async () => {
-  try {
-    const users = await User.find();
-    console.log('All users:', users);
-  } catch (err) {
-    console.error('Error fetching users:', err);
-  }
-};
-
-createUsers();
-getUsers();
+// // Run functions
+// createPlaces();
+// getPlaces();

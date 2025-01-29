@@ -1,22 +1,11 @@
 const mongoose = require('mongoose');
 
-const itemSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    }
-}, {
-    timestamps: true  
+const placeSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  location: { type: String, required: true },
+  description: { type: String },
+  visited: { type: Boolean, default: false }
 });
 
-const Item = mongoose.model('Item', itemSchema); 
-
-module.exports = Item;
+const Place = mongoose.model('Place', placeSchema);
+module.exports = Place;
