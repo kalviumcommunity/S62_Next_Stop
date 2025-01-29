@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
 import axios from "axios";
 import Entities from "./components/entities";
-
+import AddEntityPage from "./components/AddEntityPage";
 const HomePage = () => {
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col items-center justify-center px-6 text-white">
@@ -13,6 +13,7 @@ const HomePage = () => {
           Plan, organize, and track your dream destinations. Discover new places, save favorites, and relive your travel experiences.
         </p>
         <Link
+        
           to="/places"
           className="mt-6 inline-block bg-emerald-500 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-emerald-600 transition"
         >
@@ -132,6 +133,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/places/:id" element={<PlaceDetailsPage />} />
         <Route path="/places" element={<Entities />} />
+        <Route path="/addEntity" element={<AddEntityPage/>}/>
       </Routes>
     </Router>
   );
