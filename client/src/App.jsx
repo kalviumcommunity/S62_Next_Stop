@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-r
 import axios from "axios";
 import Entities from "./components/entities";
 import AddEntityPage from "./components/AddEntityPage";
+import UpdateEntityPage from "./components/UpdateEntityPage";
+
+
 const HomePage = () => {
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col items-center justify-center px-6 text-white">
@@ -134,6 +137,7 @@ const App = () => {
         <Route path="/places/:id" element={<PlaceDetailsPage />} />
         <Route path="/places" element={<Entities />} />
         <Route path="/addEntity" element={<AddEntityPage/>}/>
+        <Route path="/updateEntity/:id" element={<UpdateEntityPage/>}/>
       </Routes>
     </Router>
   );
