@@ -36,7 +36,7 @@ function TravelDestinations() {
         } catch (error) {
             console.error("Error deleting place:", error);
         }
-    };
+    }; 
 
     return (
         <div className="p-6 font-sans bg-gradient-to-b from-[#000000] via-[#000000] to-[#24002a] min-h-screen text-white">
