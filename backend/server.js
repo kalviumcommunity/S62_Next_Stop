@@ -24,6 +24,8 @@ app.get('/', (req, res) => {
     res.send({ status });
 });
 
+
+
 app.listen(PORT, () => {
     connectDatabase();
     console.log(`Server is running at http://localhost:${PORT}`);
