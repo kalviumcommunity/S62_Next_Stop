@@ -97,7 +97,8 @@ function UpdateEntityPage() {
               type="button"
               onClick={() => setFormData((prev) => ({ ...prev, visited: true }))}
               className={`px-4 py-2 rounded-lg shadow-md font-semibold ${
-                formData.visited ? "bg-purple-500 text-gray-900" : "bg-gray-700 text-gray-400"
+                formData.visited ? "bg-gradient-to-r from-gray-900 to-purple-950 hover:from-gray-900 hover:to-purple-950 text-white"
+                        : "bg-gray-700 text-gray-400"
               }`}
             >
               Yes
@@ -106,7 +107,8 @@ function UpdateEntityPage() {
               type="button"
               onClick={() => setFormData((prev) => ({ ...prev, visited: false }))}
               className={`px-4 py-2 rounded-lg shadow-md font-semibold ${
-                !formData.visited ? "bg-purple-800 text-white" : "bg-gray-700 text-gray-400"
+                !formData.visited ? "bg-gradient-to-r from-gray-900 to-purple-950 hover:from-gray-900 hover:to-purple-950 text-white"
+                        : "bg-gray-700 text-gray-400"
               }`}
             >
               No
@@ -118,8 +120,8 @@ function UpdateEntityPage() {
         <div className="flex justify-between">
         <button
          type="submit"
-         className="px-6 py-2 bg-purple-600 text-gray-900 font-semibold rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-        >
+         className="px-6 py-2 bg-gradient-to-r from-gray-900 to-purple-950 text-white font-semibold rounded-lg shadow-md hover:from-gray-900 hover:to-purple-950 focus:outline-none focus:ring-2 focus:ring-purple-400"
+         >
         Update
         </button>
 

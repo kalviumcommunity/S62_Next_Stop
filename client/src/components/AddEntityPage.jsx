@@ -91,23 +91,24 @@ function AddEntityPage() {
                         Visited
                     </label>
                     <div className="flex space-x-4">
-                <button
+                    <button
                         type="button"
-                        onClick={() => setFormData((prev) => ({ ...prev, visited: true }))}
-                        className={`px-4 py-2 rounded-lg shadow-md font-semibold ${
+                        onClick={() => setFormData((prev) => ({ ...prev, visited: true }))} 
+                        className={`px-4 py-2 rounded-lg shadow-md font-semibold transition-all duration-300 ${
                         formdata.visited
-                        ? "bg-purple-500 text-gray-900"
+                        ? "bg-gradient-to-r from-gray-900 to-purple-950 hover:from-gray-900 hover:to-purple-950 text-white"
                         : "bg-gray-700 text-gray-400"
-                    }`}
-                    >
-                        Yes
-                </button>
+                        }`}
+                        >
+                            Yes
+                        </button>
+
                 <button
                         type="button"
                         onClick={() => setFormData((prev) => ({ ...prev, visited: false }))}
                         className={`px-4 py-2 rounded-lg shadow-md font-semibold ${
                         !formdata.visited
-                        ? "bg-purple-800 text-white"
+                        ? "bg-gradient-to-r from-gray-900 to-purple-950 hover:from-gray-900 hover:to-purple-950 text-white"
                         : "bg-gray-700 text-gray-400"
                     }`}
                     >
@@ -120,8 +121,8 @@ function AddEntityPage() {
                 <div className="flex justify-between">
                 <button
                     type="submit"
-                    className="px-6 py-2 bg-purple-600 text-gray-900 font-semibold rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                >
+                    className="px-6 py-2 bg-gradient-to-r from-gray-900 to-purple-950 text-white font-semibold rounded-lg shadow-md hover:from-gray-900 hover:to-purple-950 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                    >
                     Submit
                 </button>
 
