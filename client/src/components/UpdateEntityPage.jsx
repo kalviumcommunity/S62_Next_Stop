@@ -42,7 +42,7 @@ function UpdateEntityPage() {
   };
 
   return (
-    <div className="p-6 font-sans bg-gradient-to-b from-gray-900 via-gray-800 to-black min-h-screen text-white">
+    <div className="p-6 font-sans bg-gradient-to-b from-[#24002a] via-[#000000] to-[#000000] min-h-screen text-white">
       <h1 className="text-3xl font-bold text-purple-400 mb-6 text-center">Update Place</h1>
       <form
         onSubmit={handleSubmit}
