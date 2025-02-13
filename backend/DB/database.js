@@ -1,18 +1,23 @@
-if(process.env.NODE_ENV !== 'PRODUCTION'){
-  require('dotenv').config();
+const mongoose = require("mongoose");
+
+const DB_URI = process.env.DB_URI;
+
+if (!DB_URI) {
+  console.error("🔥 ERROR: DB_URI is missing. Check your .env file.");
+  process.exit(1);
 }
 
+const connectDatabase = async () => {
+  try {
+    await mongoose.connect(DB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("✅ MongoDB Connected");
+  } catch (error) {
+    console.error("🔥 MongoDB Connection Error:", error);
+    process.exit(1);
+  }
+};
 
-const mongoose=require('mongoose')
-
-const connectDataBase = () => {
- 
-  mongoose
-    .connect(process.env.DB_URL)
-    .then((data) => {
-        console.log('Database is connected Successfully');
-      })
-      .catch((er) => console.log('Database connection Failed...', er.message));
-  };
- 
-  module.exports = connectDataBase;
+module.exports = connectDatabase;
