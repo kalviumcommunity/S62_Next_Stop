@@ -1,59 +1,61 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Entities from "./components/entities";
 import AddEntityPage from "./components/AddEntityPage";
 import UpdateEntityPage from "./components/UpdateEntityPage";
+import NavBar from "./components/NavBar";
 import Signup from "./Signup";
 import Login from "./Login";
 
+const FEATURES = [
+  { title: "Add Places", desc: "Save destinations to your travel wishlist.", to: "/addEntity", color: "bg-blue-900 hover:bg-blue-950" },
+  { title: "Read Reviews", desc: "Open any place to read and write reviews.", to: "/places", color: "bg-indigo-800 hover:bg-indigo-900" },
+  { title: "Update Places & Reviews", desc: "Edit a place or your reviews anytime.", to: "/places", color: "bg-gray-800 hover:bg-gray-950" },
+  { title: "Delete Unpopular Places", desc: "Remove places you're no longer interested in.", to: "/places", color: "bg-violet-800 hover:bg-violet-900" },
+  { title: "Mark as Visited", desc: "Track places you've been to.", to: "/places?tab=wishlist", color: "bg-teal-800 hover:bg-teal-900" },
+  { title: "Revisit List", desc: "Places you want to go back to.", to: "/places?tab=revisit", color: "bg-rose-800 hover:bg-rose-900" },
+];
+
 const HomePage = () => {
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem("token");
-  
+
   return (
-    <div className="bg-black min-h-screen flex flex-col items-center justify-center px-6 text-white relative">
-      {!isLoggedIn && (
-        <button
-          onClick={() => navigate("/login")}
-          className="absolute top-4 right-6 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:bg-blue-600 transition"
-        >
-          Login
-        </button>
-      )}
-      <header className="text-center">
-        <h1 className="text-5xl font-bold mb-4 drop-shadow-lg text-amber-400">Next Stop: Travel Planner</h1>
-        <p className="text-lg max-w-2xl mx-auto opacity-90 text-gray-300">
-          Plan, organize, and track your dream destinations. Discover new places, save favorites, and relive your travel experiences.
-        </p>
-        <button
-          onClick={() => navigate("/places")}
-          className="mt-6 inline-block bg-emerald-500 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-emerald-600 transition"
-        >
-          Explore Places
-        </button>
-      </header>
+    <div className="bg-gray-900 min-h-screen text-white">
+      <NavBar />
+      <div className="flex flex-col items-center px-6 py-16">
+        <header className="text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4 drop-shadow-lg text-amber-400">Next Stop: Travel Planner</h1>
+          <p className="text-lg max-w-2xl mx-auto opacity-90 text-gray-300">
+            Plan, organize, and track your dream destinations. Discover new places, save favorites, and relive your travel experiences.
+          </p>
+          <button
+            onClick={() => navigate("/places")}
+            className="mt-6 inline-block bg-emerald-500 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-emerald-400 transition"
+          >
+            Explore Places
+          </button>
+        </header>
 
-      <section className="mt-12 max-w-4xl">
-        <h2 className="text-3xl font-semibold text-center mb-6 text-indigo-400">Key Features</h2>
-        <TravelActions navigate={navigate} />
-      </section>
+        <section className="mt-12 w-full max-w-4xl">
+          <h2 className="text-3xl font-semibold text-center mb-6 text-indigo-400">Key Features</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {FEATURES.map((f) => (
+              <button
+                key={f.title}
+                onClick={() => navigate(f.to)}
+                className={`${f.color} p-4 rounded-lg shadow-md text-left border border-gray-600 transition`}
+              >
+                <h3 className="text-lg font-semibold text-cyan-300">{f.title}</h3>
+                <p className="mt-1 text-sm text-gray-300">{f.desc}</p>
+              </button>
+            ))}
+          </div>
+        </section>
 
-      <footer className="mt-12 text-gray-400 text-sm opacity-80">
-        <p>© 2025 Next Stop: Travel Planner | Made with ❤️</p>
-      </footer>
-    </div>
-  );
-};
-
-const TravelActions = ({ navigate }) => {
-  return (
-    <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-lg">
-      <button onClick={() => navigate("/addEntity")} className="bg-blue-900 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-950 transition">Add Places</button>
-      <button onClick={() => navigate("/places")} className="bg-sky-900 text-white px-6 py-3 rounded-lg shadow-md hover:bg-sky-900 transition">Read Reviews</button>
-      <button onClick={() => navigate("/updateEntity/1")} className="bg-gray-800 text-white px-6 py-3 rounded-lg shadow-md hover:bg-gray-950 transition">Update Places & Reviews</button>
-      <button onClick={() => navigate("/places")} className="bg-violet-800 text-white px-6 py-3 rounded-lg shadow-md hover:bg-violet-900 transition">Delete Unpopular Places</button>
-      <button onClick={() => navigate("/updateEntity/1")} className="bg-cyan-800 text-gray-900 px-6 py-3 rounded-lg shadow-md hover:bg-cyan-900 transition">Mark as Visited</button>
-      <button onClick={() => navigate("/revisitList")} className="bg-rose-800 text-white px-6 py-3 rounded-lg shadow-md hover:bg-rose-900 transition">Revisit List</button>
+        <footer className="mt-12 text-gray-400 text-sm opacity-80">
+          <p>© {new Date().getFullYear()} Next Stop: Travel Planner | Made with ❤️</p>
+        </footer>
+      </div>
     </div>
   );
 };
@@ -66,12 +68,15 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/places" element={<Entities />} />
+        <Route path="/places/:id" element={<Entities />} />
         <Route path="/addEntity" element={<AddEntityPage />} />
         <Route path="/updateEntity/:id" element={<UpdateEntityPage />} />
-        <Route path="/readReviews" element={<div className="text-white text-center mt-20">Read Reviews Page</div>} />
-        <Route path="/deletePlaces" element={<div className="text-white text-center mt-20">Delete Places Page</div>} />
-        <Route path="/markVisited" element={<div className="text-white text-center mt-20">Mark Visited Page</div>} />
-        <Route path="/revisitList" element={<div className="text-white text-center mt-20">Revisit List Page</div>} />
+        {/* Old placeholder routes now point at the real lists */}
+        <Route path="/readReviews" element={<Navigate to="/places" replace />} />
+        <Route path="/deletePlaces" element={<Navigate to="/places" replace />} />
+        <Route path="/markVisited" element={<Navigate to="/places?tab=wishlist" replace />} />
+        <Route path="/revisitList" element={<Navigate to="/places?tab=revisit" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

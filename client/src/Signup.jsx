@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "./api";
 
 const Signup = () => {
-  const API_URL = "http://localhost:8080/api/auth";
+  const API_URL = `${API_BASE}/auth`;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +28,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.error("Error:", error);
-      setMessage("Something went wrong");
+      setMessage("Can't reach the server. Is the backend running?");
     }
   };
 

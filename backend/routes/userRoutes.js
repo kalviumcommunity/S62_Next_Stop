@@ -1,5 +1,6 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
 const router = express.Router();
@@ -28,11 +29,15 @@ router.post("/register", validateUser, async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
 
-    // ✅ Save New User
-    const newUser = new User({ name, email, password });
+    // ✅ Save New User (password hashed, same as /api/auth/signup)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully", user: newUser });
+    res.status(201).json({
+      message: "User registered successfully",
+      user: { _id: newUser._id, name: newUser.name, email: newUser.email },
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

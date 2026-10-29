@@ -11,6 +11,13 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
+  if (!name || !email || !password) {
+    return res.status(400).json({ msg: "Name, email and password are required" });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ msg: "Password must be at least 6 characters long" });
+  }
+
   try {
     let user = await User.findOne({ email });
 

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "./api";
 
 const Login = () => {
-  const API_URL = "http://localhost:8080/api/auth";
+  const API_URL = `${API_BASE}/auth`;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -16,8 +17,6 @@ const Login = () => {
       return;
     }
 
-    console.log("🔹 Sending Login Request:", { email, password });
-
     try {
       const response = await fetch(`${API_URL}/login`, {
         method: "POST",
@@ -26,7 +25,6 @@ const Login = () => {
       });
 
       const data = await response.json();
-      console.log("🔹 Response Data:", data);
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
@@ -37,7 +35,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error("🔥 Error:", error);
-      setMessage("Something went wrong");
+      setMessage("Can't reach the server. Is the backend running?");
     }
   };
 
