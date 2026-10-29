@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "PRODUCTION") {
+  require("dotenv").config();
+}
 require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
 
 const express = require("express");
@@ -8,6 +11,28 @@ const connectDatabase = require("./DB/database.js");
 const routes = require("./routes/router.js");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+
+const app = express();
+
+// CLIENT_ORIGIN can be a comma-separated list; if unset, all origins are allowed.
+const origins = process.env.CLIENT_ORIGIN
+  ? process.env.CLIENT_ORIGIN.split(",").map((o) => o.trim())
+  : true;
+
+app.use(express.json());
+app.use(cors({ origin: origins }));
+
+const PORT = process.env.PORT || 8080;
+
+// Routes
+app.use("/api", routes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+
+// Health check
+app.get("/ping", (req, res) => res.send("pong"));
+
+// Database connection status
 const tripRoutes = require("./routes/tripRoutes");
 const memoryRoutes = require("./routes/memoryRoutes");
 const socialRoutes = require("./routes/socialRoutes");
@@ -49,6 +74,17 @@ app.get("/", (req, res) => {
   res.send({ status });
 });
 
+app.use((req, res) => res.status(404).json({ message: "Route not found" }));
+
+// Start server (skipped when this file is imported, e.g. by tests)
+if (require.main === module) {
+  connectDatabase();
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!" });

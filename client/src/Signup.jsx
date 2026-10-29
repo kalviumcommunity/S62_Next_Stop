@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "./api";
 
 const Signup = () => {
+  const API_URL = `${API_BASE}/auth`;
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const API_URL = "http://localhost:8000/api/auth";
   const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "" });
   const [msg, setMsg] = useState("");
@@ -34,6 +40,9 @@ const Signup = () => {
       } else {
         setMsg(data.msg || "Signup failed."); setMsgType("error");
       }
+    } catch (error) {
+      console.error("Error:", error);
+      setMessage("Can't reach the server. Is the backend running?");
     } catch {
       setMsg("Connection error. Please try again."); setMsgType("error");
     } finally {

@@ -1,4 +1,6 @@
 const express = require("express");
+const { body, validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const Place = require("../models/itemModel");
 const Trip = require("../models/Trip");
@@ -82,6 +84,15 @@ router.get("/me/stats", protect, async (req, res) => {
         ? (places.filter(p => p.rating).reduce((sum, p) => sum + p.rating, 0) / places.filter(p => p.rating).length).toFixed(1)
         : 0,
 
+    // ✅ Save New User (password hashed, same as /api/auth/signup)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ name, email, password: hashedPassword });
+    await newUser.save();
+
+    res.status(201).json({
+      message: "User registered successfully",
+      user: { _id: newUser._id, name: newUser.name, email: newUser.email },
+    });
       // Financial statistics
       totalBudget: trips.reduce((sum, trip) => sum + (Number(trip.budget) || 0), 0),
       totalSpent: trips.reduce((sum, trip) => sum + (Number(trip.totalSpent) || 0), 0),

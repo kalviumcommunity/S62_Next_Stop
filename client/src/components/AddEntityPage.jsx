@@ -1,3 +1,7 @@
+import PlaceFormPage from "./PlaceFormPage";
+
+function AddEntityPage() {
+  return <PlaceFormPage />;
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../services/api";

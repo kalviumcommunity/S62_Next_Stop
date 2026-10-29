@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "./api";
 
 const Login = () => {
+  const API_URL = `${API_BASE}/auth`;
   const API_URL = "http://localhost:8000/api/auth";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,6 +15,12 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!email.trim() || !password.trim()) {
+      setMessage("Please enter email and password");
+      return;
+    }
+
     setMsg("");
     if (!email.trim() || !password.trim()) { setMsg("Please fill in all fields"); setMsgType("error"); return; }
     if (!email.includes("@")) { setMsg("Enter a valid email address"); setMsgType("error"); return; }
@@ -25,6 +33,10 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
+      const data = await response.json();
+
+      if (response.ok) {
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem("token", data.token);
@@ -33,6 +45,9 @@ const Login = () => {
       } else {
         setMsg(data.msg || "Login failed."); setMsgType("error");
       }
+    } catch (error) {
+      console.error("🔥 Error:", error);
+      setMessage("Can't reach the server. Is the backend running?");
     } catch {
       setMsg("Connection error. Please try again."); setMsgType("error");
     } finally {
