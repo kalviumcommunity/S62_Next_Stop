@@ -19,10 +19,19 @@ router.post("/signup", async (req, res) => {
   }
 
   try {
+    // Validation
+    if (!name || !email || !password) {
+      return res.status(400).json({ msg: "All fields are required" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ msg: "Password must be at least 6 characters" });
+    }
+
     let user = await User.findOne({ email });
 
     if (user) {
-      return res.status(400).json({ msg: "User already exists" });
+      return res.status(400).json({ msg: "User with this email already exists" });
     }
 
     // Hash password before saving
@@ -32,7 +41,8 @@ router.post("/signup", async (req, res) => {
     user = new User({ name, email, password: hashedPassword });
     await user.save();
 
-    return res.status(201).json({ msg: "User registered successfully" });
+    console.log("✅ User registered successfully:", email);
+    return res.status(201).json({ msg: "User registered successfully. Please login." });
   } catch (error) {
     console.error("🔥 Signup Error:", error);
     res.status(500).json({ msg: "Internal Server Error" });
@@ -44,22 +54,30 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Validation
+    if (!email || !password) {
+      return res.status(400).json({ msg: "Email and password are required" });
+    }
+
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ msg: "Invalid Credentials" });
+      console.log("❌ Login attempt: User not found -", email);
+      return res.status(400).json({ msg: "Invalid Credentials - user not found. Please sign up first." });
     }
 
     // Compare entered password with stored hash
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid Credentials" });
+      console.log("❌ Login attempt: Wrong password for -", email);
+      return res.status(400).json({ msg: "Invalid Credentials - password is incorrect." });
     }
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "7d" });
 
+    console.log("✅ Login successful:", email);
     res.json({ msg: "Login successful", token });
   } catch (error) {
     console.error("🔥 Login Error:", error);

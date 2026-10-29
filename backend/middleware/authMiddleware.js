@@ -2,16 +2,26 @@ const jwt = require("jsonwebtoken");
 
 // Must match the secret used to sign tokens in routes/authRoutes.js
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined in environment variables");
+}
 
 module.exports = (req, res, next) => {
-  const token = req.header("Authorization");
-  if (!token) return res.status(401).json({ msg: "Access Denied" });
+  const authHeader = req.header("Authorization");
+  if (!authHeader) return res.status(401).json({ msg: "Access Denied: No token provided" });
+
+  const token = authHeader.replace("Bearer ", "");
+  if (!token) return res.status(401).json({ msg: "Access Denied: Invalid token format" });
 
   try {
     const verified = jwt.verify(token.replace("Bearer ", ""), JWT_SECRET);
     req.user = verified;
+    const verified = jwt.verify(token, JWT_SECRET);
+    req.userId = verified.userId;
     next();
   } catch (err) {
-    res.status(401).json({ msg: "Invalid token" });
+    res.status(403).json({ msg: "Access Denied: Invalid token" });
   }
 };
