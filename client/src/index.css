@@ -1,3 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --night: #020617;
+  --navy: #050d1f;
+  --deep: #0a1628;
+  --blue: #3b82f6;
+  --cyan: #06b6d4;
+}
+
+body {
+  background-color: var(--night);
+  color: white;
+  font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #050d1f; }
+::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+
+input[type="range"] { accent-color: #3b82f6; }
+
+@layer components {
+  /* Cards */
+  .glass-card {
+    @apply bg-blue-950/20 backdrop-blur-xl border border-blue-500/15 rounded-2xl;
+  }
+  .glass-card-hover {
+    @apply glass-card hover:border-blue-400/35 hover:bg-blue-950/30 transition-all duration-300;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl
+           px-6 py-3 hover:from-blue-500 hover:to-cyan-500
+           hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply bg-blue-950/40 border border-blue-500/25 text-blue-200 font-semibold rounded-xl
+           px-6 py-3 hover:bg-blue-900/50 hover:border-blue-400/40 transition-all duration-300;
+  }
+
+  /* Inputs */
+  .input-field {
+    @apply w-full px-4 py-3 bg-[#0a1628] border border-blue-500/25 rounded-xl text-white
+           placeholder-blue-400/40 focus:outline-none focus:ring-2 focus:ring-blue-500/40
+           focus:border-blue-500/50 transition-all duration-200;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-300 bg-clip-text text-transparent;
+  }
+
+  /* Page wrapper */
+  .page-bg {
+    @apply min-h-screen text-white;
+    background: radial-gradient(ellipse at top, #050d1f 0%, #020617 70%);
+  }
+
+  /* Glow orb */
+  .glow-orb {
+    @apply absolute rounded-full blur-3xl pointer-events-none;
+  }
+}
