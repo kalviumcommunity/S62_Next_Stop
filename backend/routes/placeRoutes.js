@@ -23,11 +23,58 @@ router.post("/new-places", protect, async (req, res) => {
     }
 });
 
-// ✅ Get All Places
+// ✅ Get All Places with Advanced Filtering and Sorting
 router.get("/", protect, async (req, res) => {
     try {
-        const places = await Place.find();
-        res.status(200).json(places);
+        const {
+            search,
+            searchType = "all",
+            category,
+            visited,
+            favorite,
+            rating,
+            sortBy = "name",
+            sortOrder = "asc"
+        } = req.query;
+
+        let query = {};
+
+        // Build search query based on searchType
+        if (search) {
+            const searchRegex = new RegExp(search, 'i'); // Case-insensitive search
+            switch (searchType) {
+                case "name":
+                    query.name = searchRegex;
+                    break;
+                case "location":
+                    query.location = searchRegex;
+                    break;
+                case "description":
+                    query.description = searchRegex;
+                    break;
+                case "all":
+                default:
+                    query.$or = [
+                        { name: searchRegex },
+                        { location: searchRegex },
+                        { description: searchRegex }
+                    ];
+                    break;
+            }
+        }
+
+        // Add filters
+        if (category) query.category = category;
+        if (visited !== undefined && visited !== "") query.visited = visited === "true";
+        if (favorite !== undefined && favorite !== "") query.favorite = favorite === "true";
+        if (rating) query.rating = { $gte: parseInt(rating) };
+
+        // Build sort object
+        const sortOptions = {};
+        sortOptions[sortBy] = sortOrder === "desc" ? -1 : 1;
+
+        const places = await Place.find(query).sort(sortOptions);
+        res.status(200).json({ places, total: places.length });
     } catch (error) {
         console.error("Error fetching places:", error);
         res.status(500).json({ message: "Internal Server Error" });
